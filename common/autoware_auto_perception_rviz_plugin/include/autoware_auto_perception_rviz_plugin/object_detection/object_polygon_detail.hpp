@@ -30,6 +30,8 @@
 #include <geometry_msgs/msg/pose_with_covariance.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <geometry_msgs/msg/twist_with_covariance.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <sensor_msgs/point_cloud2_iterator.hpp>
 #include <visualization_msgs/msg/marker.hpp>
 
 #include <algorithm>
@@ -174,6 +176,11 @@ get_path_confidence_marker_ptr(
 AUTOWARE_AUTO_PERCEPTION_RVIZ_PLUGIN_PUBLIC void calc_arc_line_strip(
   const double start_angle, const double end_angle, const double radius,
   std::vector<geometry_msgs::msg::Point> & points);
+
+AUTOWARE_AUTO_PERCEPTION_RVIZ_PLUGIN_PUBLIC visualization_msgs::msg::Marker::SharedPtr
+get_point_cloud_marker_ptr(
+  const sensor_msgs::msg::PointCloud2 & point_cloud, const std_msgs::msg::ColorRGBA & color_rgba,
+  const double & scale);
 
 AUTOWARE_AUTO_PERCEPTION_RVIZ_PLUGIN_PUBLIC void calc_line_list_from_points(
   const double point_list[][3], const int point_pairs[][2], const int & num_pairs,
