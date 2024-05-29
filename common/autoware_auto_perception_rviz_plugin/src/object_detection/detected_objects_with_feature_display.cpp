@@ -28,10 +28,7 @@ DetectedObjectsWithFeatureDisplay::DetectedObjectsWithFeatureDisplay()
 : ObjectPolygonDisplayBase("detected_objects_with_feature"),
   m_display_point_cloud_property{
     "Display Point Cloud", true, "Enable/disable point cloud visualization", this},
-  m_color_property{"Color", QColor{255, 255, 255}, "Set color value.", this},
-  m_alpha_property{
-    "Alpha", 0.7, "Set point cloud transparency value. Should be between 0 and 1.", this},
-  m_scale_property{"Scale", 0.07, "Set point cloud scale value.", this}
+  m_point_size_property{"Point Size", 0.07, "Set the size of points from the point cloud.", this}
 {
 }
 
@@ -161,8 +158,8 @@ void DetectedObjectsWithFeatureDisplay::processMessage(
       add_marker(marker_ptr);
     }
     // Get marker for cluster
-    auto point_cloud_marker =
-      get_point_cloud_marker_ptr(feature_object.feature.cluster, get_rgba(), get_scale());
+    auto point_cloud_marker = get_point_cloud_marker_ptr(
+      feature_object.feature.cluster, object.classification, get_scale());
     if (point_cloud_marker) {
       auto point_cloud_marker_ptr = point_cloud_marker.value();
       point_cloud_marker_ptr->header = msg->header;

@@ -36,35 +36,25 @@ public:
   DetectedObjectsWithFeatureDisplay();
 
 private:
+  template <typename ClassificationContainerT>
   std::optional<Marker::SharedPtr> get_point_cloud_marker_ptr(
-    const sensor_msgs::msg::PointCloud2 & point_cloud, const std_msgs::msg::ColorRGBA & color,
+    const sensor_msgs::msg::PointCloud2 & point_cloud, const ClassificationContainerT & labels,
     const double & scale) const
   {
+    const std_msgs::msg::ColorRGBA color_rgba = get_color_rgba(labels);
     if (m_display_point_cloud_property.getBool()) {
-      return detail::get_point_cloud_marker_ptr(point_cloud, color, scale);
+      return detail::get_point_cloud_marker_ptr(point_cloud, color_rgba, scale);
     } else {
       return std::nullopt;
     }
   }
 
-  double get_scale() { return m_scale_property.getFloat(); }
-  std_msgs::msg::ColorRGBA get_rgba()
-  {
-    QColor color = m_color_property.getColor();
-    std_msgs::msg::ColorRGBA color_rgba;
-    color_rgba.r = color.redF();
-    color_rgba.g = color.greenF();
-    color_rgba.b = color.blueF();
-    color_rgba.a = m_alpha_property.getFloat();
-    return color_rgba;
-  }
+  double get_scale() { return m_point_size_property.getFloat(); }
   void processMessage(DetectedObjectsWithFeature::ConstSharedPtr msg) override;
 
   // Properties to enable/disable and modify point cloud visualization
   rviz_common::properties::BoolProperty m_display_point_cloud_property;
-  rviz_common::properties::ColorProperty m_color_property;
-  rviz_common::properties::FloatProperty m_alpha_property;
-  rviz_common::properties::FloatProperty m_scale_property;
+  rviz_common::properties::FloatProperty m_point_size_property;
 };
 
 }  // namespace object_detection
