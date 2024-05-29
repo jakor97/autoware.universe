@@ -579,6 +579,35 @@ visualization_msgs::msg::Marker::SharedPtr get_2d_shape_marker_ptr(
   return marker_ptr;
 }
 
+visualization_msgs::msg::Marker::SharedPtr get_point_cloud_marker_ptr(
+  const sensor_msgs::msg::PointCloud2 & point_cloud, const std_msgs::msg::ColorRGBA & color_rgba,
+  const double & scale)
+{
+  auto marker_ptr = std::make_shared<Marker>();
+  marker_ptr->ns = std::string("point cloud");
+
+  using sensor_msgs::msg::PointCloud2;
+  marker_ptr->type = visualization_msgs::msg::Marker::POINTS;
+  auto x_it = sensor_msgs::PointCloud2ConstIterator<float>(point_cloud, "x");
+  auto y_it = sensor_msgs::PointCloud2ConstIterator<float>(point_cloud, "y");
+  auto z_it = sensor_msgs::PointCloud2ConstIterator<float>(point_cloud, "z");
+
+  for (; x_it != x_it.end(); ++x_it, ++y_it, ++z_it) {
+    geometry_msgs::msg::Point pt;
+    pt.x = *x_it;
+    pt.y = *y_it;
+    pt.z = *z_it;
+    marker_ptr->points.push_back(pt);
+  }
+  marker_ptr->color = color_rgba;
+  marker_ptr->scale.x = scale;
+  marker_ptr->scale.y = scale;
+  marker_ptr->scale.z = scale;
+  marker_ptr->action = visualization_msgs::msg::Marker::ADD;
+  marker_ptr->lifetime = rclcpp::Duration::from_seconds(0.15);
+  return marker_ptr;
+}
+
 void calc_line_list_from_points(
   const double point_list[][3], const int point_pairs[][2], const int & num_pairs,
   std::vector<geometry_msgs::msg::Point> & points)
