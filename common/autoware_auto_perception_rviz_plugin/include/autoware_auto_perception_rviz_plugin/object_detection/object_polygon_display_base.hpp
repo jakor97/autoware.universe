@@ -85,11 +85,9 @@ public:
     m_display_path_confidence_property{
       "Display Predicted Path Confidence", true, "Enable/disable predicted paths visualization",
       this},
-
     m_display_existence_probability_property{
       "Display Existence Probability", false, "Enable/disable existence probability visualization",
       this},
-
     m_line_width_property{"Line Width", 0.03, "Line width of object-shape", this},
     m_default_topic{default_topic}
   {

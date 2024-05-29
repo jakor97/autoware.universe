@@ -173,14 +173,14 @@ get_path_confidence_marker_ptr(
   const autoware_auto_perception_msgs::msg::PredictedPath & predicted_path,
   const std_msgs::msg::ColorRGBA & path_confidence_color);
 
-AUTOWARE_AUTO_PERCEPTION_RVIZ_PLUGIN_PUBLIC void calc_arc_line_strip(
-  const double start_angle, const double end_angle, const double radius,
-  std::vector<geometry_msgs::msg::Point> & points);
-
 AUTOWARE_AUTO_PERCEPTION_RVIZ_PLUGIN_PUBLIC visualization_msgs::msg::Marker::SharedPtr
 get_point_cloud_marker_ptr(
   const sensor_msgs::msg::PointCloud2 & point_cloud, const std_msgs::msg::ColorRGBA & color_rgba,
   const double & scale);
+
+AUTOWARE_AUTO_PERCEPTION_RVIZ_PLUGIN_PUBLIC void calc_arc_line_strip(
+  const double start_angle, const double end_angle, const double radius,
+  std::vector<geometry_msgs::msg::Point> & points);
 
 AUTOWARE_AUTO_PERCEPTION_RVIZ_PLUGIN_PUBLIC void calc_line_list_from_points(
   const double point_list[][3], const int point_pairs[][2], const int & num_pairs,
