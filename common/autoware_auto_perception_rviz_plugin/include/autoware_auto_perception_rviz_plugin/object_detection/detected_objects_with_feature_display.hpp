@@ -39,17 +39,17 @@ private:
   template <typename ClassificationContainerT>
   std::optional<Marker::SharedPtr> get_point_cloud_marker_ptr(
     const sensor_msgs::msg::PointCloud2 & point_cloud, const ClassificationContainerT & labels,
-    const double & scale) const
+    const double & point_size) const
   {
     const std_msgs::msg::ColorRGBA color_rgba = get_color_rgba(labels);
     if (m_display_point_cloud_property.getBool()) {
-      return detail::get_point_cloud_marker_ptr(point_cloud, color_rgba, scale);
+      return detail::get_point_cloud_marker_ptr(point_cloud, color_rgba, point_size);
     } else {
       return std::nullopt;
     }
   }
 
-  double get_scale() { return m_point_size_property.getFloat(); }
+  double get_point_size() { return m_point_size_property.getFloat(); }
   void processMessage(DetectedObjectsWithFeature::ConstSharedPtr msg) override;
 
   // Properties to enable/disable and modify point cloud visualization

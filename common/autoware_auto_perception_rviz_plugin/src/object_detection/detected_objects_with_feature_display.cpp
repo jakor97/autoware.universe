@@ -159,7 +159,7 @@ void DetectedObjectsWithFeatureDisplay::processMessage(
     }
     // Get marker for cluster
     auto point_cloud_marker = get_point_cloud_marker_ptr(
-      feature_object.feature.cluster, object.classification, get_scale());
+      feature_object.feature.cluster, object.classification, get_point_size());
     if (point_cloud_marker) {
       auto point_cloud_marker_ptr = point_cloud_marker.value();
       point_cloud_marker_ptr->header = msg->header;
