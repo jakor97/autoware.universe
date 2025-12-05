@@ -23436,8 +23436,10 @@
 <li><strong>TrajectoryQPSmoother</strong> - QP-based path smoothing with jerk constraints</li>
 <li><strong>TrajectoryEBSmootherOptimizer</strong> - Elastic Band path smoothing</li>
 <li><strong>TrajectorySplineSmoother</strong> - Akima spline interpolation</li>
+<li><strong>TrajectoryMPTOptimizer</strong> - Model predictive trajectory optimization with adaptive corridor bounds. Uses bicycle kinematics model for trajectory refinement. Disabled by default (experimental). See <a href="docs/mpt_optimizer/">docs/mpt_optimizer.md</a> for details.</li>
 <li><strong>TrajectoryVelocityOptimizer</strong> - Velocity profile optimization with lateral acceleration limits</li>
 <li><strong>TrajectoryExtender</strong> - Extends trajectory backward using past ego states</li>
+<li><strong>TrajectoryKinematicFeasibilityEnforcer</strong> - Enforces Ackermann steering and yaw rate constraints</li>
 </ol>
 <p>Each plugin can be enabled/disabled at runtime via activation flags (e.g., <code>use_qp_smoother</code>) and manages its own configuration independently.</p>
 <h3 id="important-plugin-ordering-constraints">⚠️ Important: Plugin Ordering Constraints<a class="headerlink" href="#important-plugin-ordering-constraints" title="Permanent link">#</a></h3>
@@ -23543,6 +23545,13 @@
 <td>N/A</td>
 </tr>
 <tr>
+<td>use_mpt_optimizer</td>
+<td>boolean</td>
+<td>Enable MPT (Model Predictive Trajectory) optimizer plugin for geometry refinement with adaptive bounds</td>
+<td>False</td>
+<td>N/A</td>
+</tr>
+<tr>
 <td>trajectory_point_fixer.resample_close_points</td>
 <td>boolean</td>
 <td>Enable resampling of close proximity points</td>
@@ -23569,6 +23578,90 @@
 <td>Maximum yaw rate [rad/s]. Default: 0.7 rad/s (~40 deg/s) aligns with MPC controller. Typical range: 0.5-1.0 for autonomous vehicles.</td>
 <td>0.7</td>
 <td>≥0.1<br>≤2.0</td>
+</tr>
+<tr>
+<td>trajectory_mpt_optimizer.corridor_width_m</td>
+<td>float</td>
+<td>Base corridor width for adaptive bounds generation [m]. Defines the lateral distance from trajectory centerline to left/right bounds.</td>
+<td>3.5</td>
+<td>≥2.0<br>≤10.0</td>
+</tr>
+<tr>
+<td>trajectory_mpt_optimizer.enable_adaptive_width</td>
+<td>boolean</td>
+<td>Enable adaptive corridor width based on curvature and velocity. When true, corridor widens in curves and at low speeds.</td>
+<td>True</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>trajectory_mpt_optimizer.curvature_width_factor</td>
+<td>float</td>
+<td>Factor for curvature-based corridor widening [m/rad]. Higher values provide more space in curves.</td>
+<td>0.5</td>
+<td>≥0.0<br>≤2.0</td>
+</tr>
+<tr>
+<td>trajectory_mpt_optimizer.velocity_width_factor</td>
+<td>float</td>
+<td>Factor for velocity-based corridor widening [m]. Higher values provide more maneuvering room at low speeds.</td>
+<td>0.3</td>
+<td>≥0.0<br>≤2.0</td>
+</tr>
+<tr>
+<td>trajectory_mpt_optimizer.min_clearance_m</td>
+<td>float</td>
+<td>Minimum clearance from vehicle edges to corridor bounds [m]. Ensures minimum safe distance.</td>
+<td>0.5</td>
+<td>≥0.0<br>≤2.0</td>
+</tr>
+<tr>
+<td>trajectory_mpt_optimizer.reset_previous_data_each_iteration</td>
+<td>boolean</td>
+<td>Reset MPT's previous optimization data each cycle. Should be true for diffusion planner (new trajectories each cycle), false for incremental planners.</td>
+<td>True</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>trajectory_mpt_optimizer.enable_debug_info</td>
+<td>boolean</td>
+<td>Enable debug visualization markers for bounds and reference trajectory.</td>
+<td>False</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>trajectory_mpt_optimizer.output_delta_arc_length_m</td>
+<td>float</td>
+<td>Spacing between trajectory points in MPT optimization [m]. Smaller values provide finer resolution but increase computation.</td>
+<td>1.0</td>
+<td>≥0.1<br>≤5.0</td>
+</tr>
+<tr>
+<td>trajectory_mpt_optimizer.output_backward_traj_length_m</td>
+<td>float</td>
+<td>Length of trajectory extension backward from ego pose [m].</td>
+<td>5.0</td>
+<td>≥0.0<br>≤20.0</td>
+</tr>
+<tr>
+<td>trajectory_mpt_optimizer.ego_nearest_dist_threshold_m</td>
+<td>float</td>
+<td>Distance threshold for finding nearest trajectory point to ego [m].</td>
+<td>3.0</td>
+<td>≥0.5<br>≤10.0</td>
+</tr>
+<tr>
+<td>trajectory_mpt_optimizer.ego_nearest_yaw_threshold_deg</td>
+<td>float</td>
+<td>Yaw threshold for finding nearest trajectory point to ego [degrees].</td>
+<td>45.0</td>
+<td>≥10.0<br>≤90.0</td>
+</tr>
+<tr>
+<td>trajectory_mpt_optimizer.acceleration_moving_average_window</td>
+<td>integer</td>
+<td>Moving average window size for acceleration smoothing. Larger values produce smoother acceleration but increase lag. Window of 1 = no smoothing.</td>
+<td>5</td>
+<td>≥1<br>≤20</td>
 </tr>
 <tr>
 <td>trajectory_extender.nearest_dist_threshold_m</td>
